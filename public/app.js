@@ -30,6 +30,15 @@ async function getData() {
 
 const SUBJECTS = ['Physics', 'Chemistry', 'Biology', 'Mathematics'];
 const SUBJECT_ICON = { Physics: '🧲', Chemistry: '⚗️', Biology: '🧬', Mathematics: '📐' };
+const subjIconHtml = s => `<span class="sub-icon ${s.toLowerCase()}">${SUBJECT_ICON[s]}</span>`;
+const chipHtml = s => `<span class="subject-chip chip-${s.toLowerCase()}">${s}</span>`;
+// mastery: localStorage 'ls-mastery' = {subject: percent}
+const getMastery = () => JSON.parse(localStorage.getItem('ls-mastery') || '{}');
+const setMastery = (subj, pct) => { const m = getMastery(); m[subj] = Math.max(m[subj] || 0, pct); localStorage.setItem('ls-mastery', JSON.stringify(m)); };
+const getPoints = () => +(localStorage.getItem('ls-points') || 0);
+const addPoints = n => { const p = getPoints() + n; localStorage.setItem('ls-points', p); const c = $('#points-chip'); if (c) c.textContent = `⚡ ${p.toLocaleString()} energy points`; };
+const paintPoints = () => { const c = $('#points-chip'); if (c) c.textContent = `⚡ ${getPoints().toLocaleString()} energy points`; };
+const masteryHtml = subj => { const pct = getMastery()[subj] || 0; return `<div class="mastery"><div class="mastery-row"><span>Mastery</span><strong>${pct}%</strong></div><div class="mastery-bar"><div class="mastery-fill" style="width:${pct}%"></div></div></div>`; };
 
 // ================= ROUTER =================
 const routes = {
@@ -56,7 +65,7 @@ addEventListener('hashchange', navigate);
 // ================= PAGE: HOME =================
 function renderHome() {
   const subjects = SUBJECTS.map(s =>
-    `<a class="sub-card" href="#/notes/${s}"><span class="sub-icon">${SUBJECT_ICON[s]}</span><strong>${s}</strong><small>${NOTES.filter(n => n.subject === s).length} notes · ${PASTQS.filter(q => q.subject === s).length} questions</small></a>`
+    `<a class="sub-card" href="#/notes/${s}">${subjIconHtml(s)}<strong>${s}</strong><small>${NOTES.filter(n => n.subject === s).length} notes · ${PASTQS.filter(q => q.subject === s).length} questions</small>${masteryHtml(s)}</a>`
   ).join('');
 
   const totalQ = PASTQS.length;
@@ -76,7 +85,13 @@ function renderHome() {
           <div><strong>∞</strong><span>AI exams</span></div>
         </div>
       </div>
-      <div class="hero-art" aria-hidden="true"><div class="orbit o1"></div><div class="orbit o2"></div><div class="core">⚛</div></div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="subject-blob">⚛️
+          <span class="blob-float blob-f1">🧲 Physics</span>
+          <span class="blob-float blob-f2">🧬 Biology</span>
+          <span class="blob-float blob-f3">📐 Math</span>
+        </div>
+      </div>
     </section>
 
     <section class="section">
@@ -120,12 +135,17 @@ function renderNotes(subject = '') {
   });
 
   const grid = $('#notes-grid');
+  grid.className = 'unit-list';
   for (const n of notes) {
-    const card = el('a', 'card note-card', `
-      <span class="card-tag">Week ${n.week} · ${esc(n.subject)}</span>
-      <h3>${esc(n.title)}</h3>
-      <p>${esc(n.content).slice(0, 200)}…</p>
-      <span class="card-link">Open note →</span>`);
+    const card = el('a', 'unit-card', `
+      <span class="unit-num">${n.week}</span>
+      <div class="unit-body">
+        ${chipHtml(n.subject)}
+        <h3>${esc(n.title)}</h3>
+        <p>${esc(n.content).slice(0, 160)}…</p>
+        <div class="unit-meta"><span>📖 Lesson</span><span>·</span><span>Key points included</span></div>
+        <span class="unit-get">Open note →</span>
+      </div>`);
     card.href = `#/note/${NOTES.indexOf(n)}`;
     grid.append(card);
   }
@@ -161,7 +181,7 @@ function renderNote(idx) {
 function renderPractice() {
   const per = SUBJECTS.map(s => {
     const qs = PASTQS.filter(q => q.subject === s);
-    return `<a class="sub-card" href="#/quiz/${s}"><span class="sub-icon">${SUBJECT_ICON[s]}</span><strong>${s}</strong><small>${qs.length} questions · timed</small></a>`;
+    return `<a class="sub-card" href="#/quiz/${s}">${subjIconHtml(s)}<strong>${s}</strong><small>${qs.length} questions · instant feedback</small>${masteryHtml(s)}</a>`;
   }).join('');
   app.innerHTML = `
     <section class="page-head">
@@ -226,6 +246,8 @@ function renderQuiz(subject) {
 
   function finish() {
     const pct = Math.round(score / pool.length * 100);
+    if (subject !== 'Mixed') setMastery(subject, pct);
+    addPoints(score * 100);
     const verdict = pct >= 80 ? ['🏆', 'Top of the class!', 'Isaiah, you are HIM. Keep this energy for the real exam.']
       : pct >= 50 ? ['💪', 'Solid work', 'Good base — review the misses and run it back.']
       : ['📚', 'Found your gaps', 'Perfect. Now you know exactly what to read. Go again.'];
@@ -313,7 +335,7 @@ function renderScheme() {
     </section>
     <section class="section"><div class="scheme-grid">${
       Object.entries(SCHEME).map(([s, weeks]) =>
-        `<div class="scheme-col"><h3>${SUBJECT_ICON[s]} ${s}</h3><ol>${weeks.map(w => `<li>${esc(w)}</li>`).join('')}</ol></div>`).join('')
+        `<div class="scheme-col">${chipHtml(s)}<h3 style="margin-top:0.6rem">${s}</h3><ol>${weeks.map(w => `<li>${esc(w)}</li>`).join('')}</ol></div>`).join('')
     }</div></section>`;
 }
 
@@ -388,5 +410,6 @@ function renderTutor() {
 // ================= INIT =================
 (async () => {
   try { await getData(); } catch (e) { app.innerHTML = '<p class="page-head">Failed to load content — is the server up?</p>'; }
+  paintPoints();
   navigate();
 })();
