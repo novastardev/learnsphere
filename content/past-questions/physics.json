@@ -1,0 +1,12 @@
+[
+  {"subject":"Physics","year":"WASSCE style","q":"A car starts from rest and accelerates uniformly at 2 m/s² for 10 s. What is its final velocity?","options":["10 m/s","20 m/s","40 m/s","5 m/s"],"answer":"B","explanation":"v = u + at = 0 + (2)(10) = 20 m/s."},
+  {"subject":"Physics","year":"WASSCE style","q":"Which of the following is a vector quantity?","options":["Mass","Speed","Distance","Weight"],"answer":"D","explanation":"Weight = mg has magnitude and direction; the others are scalars."},
+  {"subject":"Physics","year":"WASSCE style","q":"The SI unit of power is the","options":["joule","newton","watt","pascal"],"answer":"C","explanation":"Power = work/time = J/s = watt (W)."},
+  {"subject":"Physics","year":"WASSCE style","q":"Heat is transferred through a metal rod mainly by","options":["conduction","convection","radiation","evaporation"],"answer":"A","explanation":"Solids conduct heat by particle vibration — conduction."},
+  {"subject":"Physics","year":"WASSCE style","q":"A machine does 600 J of work in 20 s. Its power is","options":["30 W","120 W","600 W","12000 W"],"answer":"A","explanation":"P = W/t = 600/20 = 30 W."},
+  {"subject":"Physics","year":"WASSCE style","q":"The angle of incidence of a ray on a plane mirror is 35°. The angle of reflection is","options":["55°","35°","70°","90°"],"answer":"B","explanation":"Law of reflection: i = r = 35°."},
+  {"subject":"Physics","year":"WASSCE style","q":"A body of mass 5 kg is lifted 2 m vertically. The work done against gravity (g = 10 m/s²) is","options":["10 J","50 J","100 J","25 J"],"answer":"C","explanation":"W = mgh = 5 × 10 × 2 = 100 J."},
+  {"subject":"Physics","year":"WASSCE style","q":"Which instrument is most suitable for measuring the internal diameter of a test tube?","options":["Metre rule","Vernier callipers","Micrometer screw gauge","Tape measure"],"answer":"B","explanation":"Vernier callipers measure internal and external diameters precisely."},
+  {"subject":"Physics","year":"WASSCE style","q":"The refractive index of glass is about 1.5. The speed of light in glass is approximately","options":["2 × 10⁸ m/s","3 × 10⁸ m/s","1.5 × 10⁸ m/s","4.5 × 10⁸ m/s"],"answer":"A","explanation":"v = c/n = (3×10⁸)/1.5 = 2×10⁸ m/s."},
+  {"subject":"Physics","year":"WASSCE style","q":"A rocket moves forward because the expelled gas pushes it forward. This illustrates Newton's","options":["first law","second law","third law","law of gravitation"],"answer":"C","explanation":"Action (gas pushed back) and reaction (rocket pushed forward) — third law."}
+]

@@ -1,0 +1,13 @@
+{
+  "name": "learnsphere",
+  "version": "1.0.0",
+  "description": "SS1 science learning platform for Nigerian students — notes, WAEC past questions, AI tutor & exam generator",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
